@@ -13,7 +13,7 @@ const validateJWT = (req = request, res = response, next) => {
     try {
         const { uid } = jwt.verify(token, secretJWT);
         req.uid = uid;
-        next();        
+        next();
     } catch (error) {
         return res.status(401).json({
             msg: 'token incorrecto'
