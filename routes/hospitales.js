@@ -15,10 +15,13 @@ router.post("/",
         validarCampos   
     ], 
     createHospitales
-);
-
-router.put("/:id",
-    [validateJWT],  
+    );
+    
+    router.put("/:id",
+    [
+        validateJWT,
+        check('nombre', 'El Nombre del Hospital es necesario').not().isEmpty(),
+    ],  
     updateHospitales
 );
 

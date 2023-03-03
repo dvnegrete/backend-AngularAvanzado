@@ -11,16 +11,19 @@ router.get('/', validateJWT, getMedicos);
 router.post("/", 
     [
         validateJWT,
-        check('nombre', "El nombre del Medico es Obligatorio").not().isEmpty(),        
+        check('nombre', "El nombre del Medico es Obligatorio").not().isEmpty(),
         check('hospital', "El Hospital ID debe ser valido").isMongoId(),
         validarCampos
     ], 
     createMedicos
-);
-
-router.put("/:id",
+    );
+    
+    router.put("/:id",
     [
         validateJWT,
+        check('nombre', "El nombre del Medico es Obligatorio").not().isEmpty(),
+        check('hospital', "El Hospital ID debe ser valido").isMongoId(),
+        validarCampos
     ],  
     updateMedicos
 );

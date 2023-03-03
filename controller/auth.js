@@ -1,4 +1,4 @@
-const { response } = require('express');
+const { response, request } = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('./../models/user');
 const { generateJWT } = require('../helpers/jwt');
@@ -23,7 +23,7 @@ const login = async (req, res = response) => {
         //Generar el Token
         const token = await generateJWT(userDB._id);
         res.json({
-            msg: token
+            token
         });
     } catch (error) {
         console.log(error);
@@ -67,7 +67,16 @@ const googleSyncIn = async (req, res = response) => {
     }
 }
 
+const renewToken = async (req = request, res = response)=> {
+    const uid = req.uid;
+    const token = await generateJWT(uid);
+    res.json({
+        token
+    })
+}
+
 module.exports = {
     login,
-    googleSyncIn
+    googleSyncIn,
+    renewToken
 }
