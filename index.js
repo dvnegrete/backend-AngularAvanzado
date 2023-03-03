@@ -9,6 +9,7 @@ const app  = express();
 //CORS
 app.use(cors());
 
+app.use(express.static('./public'))
 //lectura y parseo del body. Esto va antes de la rutas
 app.use( express.json() );
 
