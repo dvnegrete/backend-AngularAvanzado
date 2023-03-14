@@ -52,10 +52,7 @@ const createUsers = async (req, res = response) => {
             token: token
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            msg: 'Error inesperado, revisar Logs'
-        });
+        console.error(error);        
     }
 }
 
@@ -78,7 +75,13 @@ const updateUsers = async (req, res = response) => {
                 });
             }
         }
-        valuesUpdate.email = email;
+        if ( !userDB.google ) {
+            valuesUpdate.email = email;            
+        } else if ( userDB.email !== email ){
+            return res.status(400).json({
+                msg: 'Usuarios de Google no pueden cambiar su correo'
+            });
+        }
         const userUpdate = await User.findByIdAndUpdate(uid, valuesUpdate);
         res.json({
             msg: 'Usuario Actualizado',
@@ -86,9 +89,6 @@ const updateUsers = async (req, res = response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(400).json({
-            msg: 'Error inesperado'
-        });
     }
 }
 
@@ -107,9 +107,6 @@ const deleteUsers = async (req, res = response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(400).json({
-            msg: 'Error inesperado'
-        });
     }
 }
 

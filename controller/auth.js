@@ -4,6 +4,7 @@ const User = require('./../models/user');
 const { generateJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
 const { use } = require('../routes/auth');
+const user = require('./../models/user');
 
 const login = async (req, res = response) => {
     const { email, password } = req.body;
@@ -69,9 +70,11 @@ const googleSyncIn = async (req, res = response) => {
 
 const renewToken = async (req = request, res = response)=> {
     const uid = req.uid;
+    const user = await User.findById(uid);    
     const token = await generateJWT(uid);
     res.json({
-        token
+        token,
+        user
     })
 }
 
