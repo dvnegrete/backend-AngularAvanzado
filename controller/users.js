@@ -57,7 +57,7 @@ const createUsers = async (req, res = response) => {
 }
 
 const updateUsers = async (req, res = response) => {
-    //falta validar el token antes
+    
     const uid = req.params.id;
     try {
         const userDB = await User.findById(uid);
@@ -76,7 +76,7 @@ const updateUsers = async (req, res = response) => {
             }
         }
         if ( !userDB.google ) {
-            valuesUpdate.email = email;            
+            valuesUpdate.email = email;
         } else if ( userDB.email !== email ){
             return res.status(400).json({
                 msg: 'Usuarios de Google no pueden cambiar su correo'
