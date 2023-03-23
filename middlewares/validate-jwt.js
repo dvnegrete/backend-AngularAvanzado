@@ -1,6 +1,7 @@
 const { request, response } = require("express");
 const jwt = require('jsonwebtoken');
 const { secretJWT } = require("../config");
+const Usuario = require('./../models/user');
 
 
 const validateJWT = (req = request, res = response, next) => {
@@ -21,6 +22,60 @@ const validateJWT = (req = request, res = response, next) => {
     }
 }
 
+const validateAdminRole = async (req = request, res = response, next)=> {
+    try {
+        const uid = req.uid;
+        const userDB = await Usuario.findById(uid);
+        if (!userDB) {
+            return res.status(400).json({
+                msg: 'Usuario no existe'
+            })
+        }
+        if (userDB !== 'ADMIN_ROLE') {
+            return res.status(403).json({
+                msg: 'Sin privilegios'
+            })
+        }
+
+        next();
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Solo Administradores pueden ver el error'
+        })
+    }
+    
+}
+
+const validateAdminRoleOrSameUser = async (req = request, res = response, next)=> {
+    const uid = req.uid;
+    const id = req.params.id
+    try {
+        const userDB = await Usuario.findById(uid);
+        if (!userDB) {
+            return res.status(400).json({
+                msg: 'Usuario no existe'
+            })
+        }
+        if (userDB === 'ADMIN_ROLE' || uid === id ) {
+            next();
+        } else {
+            return res.status(403).json({
+                msg: 'Sin privilegios'
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Solo Administradores pueden ver el error'
+        })
+    }
+    
+}
+
 module.exports = {
-    validateJWT
+    validateJWT, 
+    validateAdminRole,
+    validateAdminRoleOrSameUser
 }
